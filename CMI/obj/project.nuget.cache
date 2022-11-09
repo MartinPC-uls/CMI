@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "Q9hhOc51/DOiWhOUnEDuZ4pUDLfI+WMElqTe1YCBdkXPwZAglR5fXLlxS68Ce6/d1IPj1H3qpFiDUbs/Ncw0GA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ghanv\\source\\repos\\CMI\\CMI\\CMI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ghanv\\.nuget\\packages\\deedle\\2.5.0\\deedle.2.5.0.nupkg.sha512",
+    "C:\\Users\\ghanv\\.nuget\\packages\\fsharp.core\\4.5.2\\fsharp.core.4.5.2.nupkg.sha512",
+    "C:\\Users\\ghanv\\.nuget\\packages\\numsharp\\0.30.0\\numsharp.0.30.0.nupkg.sha512",
+    "C:\\Users\\ghanv\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512"
+  ],
+  "logs": []
+}

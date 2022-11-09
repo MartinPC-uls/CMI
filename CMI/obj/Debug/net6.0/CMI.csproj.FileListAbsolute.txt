@@ -1,0 +1,17 @@
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Debug\net6.0\CMI.exe
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Debug\net6.0\CMI.deps.json
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Debug\net6.0\CMI.runtimeconfig.json
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Debug\net6.0\CMI.dll
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Debug\net6.0\CMI.pdb
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Debug\net6.0\NumSharp.dll
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\CMI.csproj.AssemblyReference.cache
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\CMI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\CMI.AssemblyInfoInputs.cache
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\CMI.AssemblyInfo.cs
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\CMI.csproj.CoreCompileInputs.cache
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\CMI.csproj.CopyComplete
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\CMI.dll
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\refint\CMI.dll
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\CMI.pdb
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\CMI.genruntimeconfig.cache
+C:\Users\ghanv\source\repos\CMI\CMI\obj\Debug\net6.0\ref\CMI.dll
