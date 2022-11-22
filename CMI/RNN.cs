@@ -9,26 +9,17 @@ namespace CMI
 {
     public class RNN
     {
-        NDArray Wax;
-        NDArray Waa;
-        NDArray Wya;
-        NDArray ba;
-        NDArray by;
-
-        // lstm model variables
-        NDArray Wf, bf, Wi, bi, Wc, bc, Wo, bo, Wy; // + by
-        List<NDArray> parameters = new List<NDArray>();
-        List<NDArray> parameters_lstm = new List<NDArray>();
-
-        public RNN(List<NDArray> parameters)
-        {
-            this.parameters = parameters;
-            Wax = parameters[0];
-            Waa = parameters[1];
-            Wya = parameters[2];
-            ba = parameters[3];
-            by = parameters[4];
-        }
+        public  NDArray by { get; set; }
+        public  NDArray Wf { get; set; }
+        public  NDArray bf { get; set; }
+        public  NDArray Wi { get; set; }
+        public  NDArray bi { get; set; }
+        public  NDArray Wc { get; set; }
+        public  NDArray bc { get; set; }
+        public  NDArray Wo { get; set; }
+        public  NDArray bo { get; set; }
+        public  NDArray Wy { get; set; }
+        public List<NDArray> parameters_lstm;
 
         public RNN(List<NDArray> parameters_lstm, int anyValue)
         {
@@ -45,20 +36,6 @@ namespace CMI
             by = parameters_lstm[9];
         }
 
-        public Tuple<NDArray, NDArray, Cache> rnn_cell_forward(NDArray xt, NDArray a_prev)
-        {
-            NDArray a_next = np.tanh(np.dot(Waa, a_prev) + np.dot(Wax, xt) + ba);
-            NDArray yt_pred = softmax(np.dot(Wya, a_next) + by);
-
-            //Cache cache = new Cache(yt_pred, a_next, a_prev, parameters);
-            Cache cache = new Cache(a_next, a_prev, xt, parameters);
-
-            Tuple<NDArray, NDArray, Cache> values =
-                new Tuple<NDArray, NDArray, Cache>(a_next, yt_pred, cache);
-
-            return values;
-        }
-
         public Tuple<NDArray, NDArray, NDArray, Cache> lstm_cell_forward(NDArray xt, NDArray a_prev, NDArray c_prev)
         {
             int n_x, m;
@@ -70,11 +47,6 @@ namespace CMI
             n_a = Wy.Shape[1];
 
             var concat = np.zeros((n_a + n_x, m));
-            //Console.WriteLine("concat.Shape[0]: " + concat.Shape[0]);
-            //Console.WriteLine("concat.Shape[1]: " + concat.Shape[1]);
-
-            //Console.WriteLine("a_prev.Shape[0]: " + a_prev.Shape[0]);
-            //Console.WriteLine("a_prev.Shape[1]: " + a_prev.Shape[1]);
 
             _replace(ref concat, a_prev, n_a);
             replace(ref concat, xt, n_a, true);
@@ -88,55 +60,11 @@ namespace CMI
             
             var yt_pred = softmax(np.dot(Wy, a_next) + by);
 
-            //Cache cache = new(a_next, a_prev, yt_pred, c_next, c_prev, ft, it, cct, ot, parameters_lstm); // is it correct? review this
             Cache cache = new(a_next, a_prev, xt, c_next, c_prev, ft, it, cct, ot, parameters_lstm, yt_pred);
 
             Tuple<NDArray, NDArray, NDArray, Cache> values =
                 new Tuple<NDArray, NDArray, NDArray, Cache>(a_next, c_next, yt_pred, cache);
 
-            return values;
-        }
-
-        public Tuple<NDArray, NDArray, Tuple<List<Cache>, NDArray>> rnn_forward(NDArray x, NDArray a0)
-        {
-            List<Cache> caches = new List<Cache>();
-            int n_x, m, T_x;
-            n_x = x.Shape[0];
-            m = x.Shape[1];
-            T_x = x.Shape[2];
-
-            int n_y, n_a;
-            n_y = Wya.Shape[0];
-            n_a = Wya.Shape[1];
-
-            NDArray a = np.zeros((n_a, m, T_x));
-            NDArray y_pred = np.zeros((n_y, m, T_x));
-
-            NDArray a_next = a0;
-
-            for (int t = 0; t < T_x; t++)
-            {
-                NDArray x_sliced = slice(x, t);
-                //Console.WriteLine(x_sliced.ToString());
-
-                Tuple<NDArray, NDArray, Cache> valuess = rnn_cell_forward(x_sliced, a_next);
-
-                a_next = valuess.Item1;
-                var yt_pred = valuess.Item2;
-
-                //Console.WriteLine(a.ToString());
-                //Console.WriteLine("replacing with:");
-                replace(ref a, a_next, t);
-                //Console.WriteLine(t);
-                //Console.WriteLine(a.ToString());
-                replace(ref y_pred, yt_pred, t);
-                //Console.WriteLine("---");
-                //Console.WriteLine(y_pred.ToString());
-                caches.Add(valuess.Item3);
-            }
-
-            Tuple<NDArray, NDArray, Tuple<List<Cache>, NDArray>> values =
-                new Tuple<NDArray, NDArray, Tuple<List<Cache>, NDArray>>(a, y_pred, new Tuple<List<Cache>, NDArray>(caches, x));
             return values;
         }
 
@@ -162,7 +90,6 @@ namespace CMI
             for (int t = 0; t < T_x; t++)
             {
                 NDArray x_sliced = slice(x, t);
-                //Console.WriteLine(x_sliced.ToString());
 
                 Tuple<NDArray, NDArray, NDArray, Cache> valuess = lstm_cell_forward(x_sliced, a_next, c_next);
 
@@ -170,19 +97,9 @@ namespace CMI
                 c_next = valuess.Item2;
                 var yt_pred = valuess.Item3;
 
-                //Console.WriteLine(a.ToString());
-                //Console.WriteLine("replacing with:");
                 replace(ref a, a_next, t);
-                //Console.WriteLine("a");
-                //Console.WriteLine(slice(a, t).ToString());
-                //Console.WriteLine(t);
-                //Console.WriteLine(a.ToString());
                 replace(ref y_pred, yt_pred, t);
-                //Console.WriteLine("y_pred");
-                //Console.WriteLine(y_pred.ToString());
                 replace(ref c, c_next, t);
-                //Console.WriteLine("---");
-                //Console.WriteLine(y_pred.ToString());
                 caches.Add(valuess.Item4);
             }
 
@@ -191,105 +108,8 @@ namespace CMI
             return values;
         }
 
-        public List<NDArray> rnn_cell_backward(NDArray da_next, Cache cache)
-        {
-            //var (a_next, a_prev, xt, parameters) = cache;
-            var a_next = cache.a_next;
-            var a_prev = cache.a_prev;
-            var xt = cache.xt;
-
-            //var (Wax, Waa, Wya, ba, by) = parameters;
-            var Wax = cache.Wax;
-            var Waa = cache.Waa;
-            var Wya = cache.Wya;
-            var ba = cache.ba;
-            var by = cache.by;
-
-            var dtanh = (1 - np.power(a_next, 2)) * da_next;
-
-            var dxt = np.dot(Wax.T, dtanh);
-            var dWax = np.dot(dtanh, xt.T);
-
-            var da_prev = np.dot(Waa.T, dtanh);
-            var dWaa = np.dot(dtanh, a_prev.T);
-
-            //var dba = np.sum(dtanh, axis: 1, keepdims: true);
-            //var dba = np.sum(dtanh, axis: 1);
-            var dba = sum(dtanh, 1, true);
-
-            List<NDArray> gradients = new List<NDArray>();
-            gradients.Add(dxt);
-            gradients.Add(da_prev);
-            gradients.Add(dWax);
-            gradients.Add(dWaa);
-            gradients.Add(dba);
-
-            return gradients;
-        }
-
-        public List<NDArray> rnn_backward(NDArray da, Tuple<List<Cache>, NDArray> caches)
-        {
-            //var (caches, x) = caches;
-            //var (a1, a0, x1, parameters) = caches[0];
-            //var (Wax, Waa, Wya, ba, by) = parameters;
-            var caches_ = caches.Item1;
-            var x = caches.Item2;
-
-            var a1 = caches_[0].a_next;
-            var a0 = caches_[0].a_prev;
-            var x1 = caches_[0].xt;
-
-            var Wax = caches_[0].Wax;
-            var Waa = caches_[0].Waa;
-            var Wya = caches_[0].Wya;
-            var ba = caches_[0].ba;
-            var by = caches_[0].by;
-
-            int n_a, m, T_x;
-            n_a = da.Shape[0];
-            m = da.Shape[1];
-            T_x = da.Shape[2];
-
-            int n_x = x.Shape[0];
-
-            NDArray dx = np.zeros((n_x, m, T_x));
-            NDArray dWax = np.zeros((n_a, n_x));
-            NDArray dWaa = np.zeros((n_a, n_a));
-            NDArray dba = np.zeros((n_a, 1));
-            NDArray da0 = np.zeros((n_a, m));
-            NDArray da_prevt = np.zeros((n_a, m));
-
-            for (int t = T_x - 1; t >= 0; t--)
-            {
-                var gradients = rnn_cell_backward(da_prevt + slice(da, t), caches.Item1[t]);
-
-                var dxt = gradients[0];
-                da_prevt = gradients[1];
-                var dWaxt = gradients[2];
-                var dWaat = gradients[3];
-                var dbat = gradients[4];
-
-                replace(ref dx, dxt, t);
-                dWax += dWaxt;
-                dWaa += dWaat;
-                dba += dbat;
-            }
-
-            da0 = da_prevt;
-
-            List<NDArray> gradients2 = new List<NDArray>();
-            gradients2.Add(dx);
-            gradients2.Add(da0);
-            gradients2.Add(dWax);
-            gradients2.Add(dWaa);
-            gradients2.Add(dba);
-
-            return gradients2;
-        }
-
         public List<NDArray> lstm_cell_backward(NDArray da_next, NDArray dc_next, Cache cache)
         {
-            //var (a_next, c_next, a_prev, c_prev, ft, it, cct, ot, xt, parameters) = cache;
             var a_next = cache.a_next;
             var c_next = cache.c_next;
             var a_prev = cache.a_prev;
@@ -304,7 +124,6 @@ namespace CMI
             int m_x = xt.Shape[1];
             int n_a = a_next.Shape[0];
             int m_a = a_next.Shape[1];
-
 
             var dot = da_next * np.tanh(c_next) * ot * (1 - ot);
             var dcct = (dc_next * it + ot * (1 - np.power(np.tanh(c_next), 2)) * it * da_next) * (1 - np.power(cct, 2));
@@ -350,23 +169,9 @@ namespace CMI
 
         public List<NDArray> lstm_backward(NDArray da, List<Cache> caches)
         {
-            //var (caches, x) = caches;
             var caches_ = caches[0];
-            //var x = caches.Item2; // ??
 
-            var a1 = caches_.a_next;
-            var a0 = caches_.a_prev;
             var x1 = caches_.xt;
-            var Wf = caches_.Wf;
-            var bf = caches_.bf;
-            var Wi = caches_.Wi;
-            var bi = caches_.bi;
-            var Wo = caches_.Wo;
-            var bo = caches_.bo;
-            var Wc = caches_.Wc;
-            var bc = caches_.bc;
-            var Wy = caches_.Wy;
-            var by = caches_.by;
 
             int n_a, m, T_x;
             n_a = da.Shape[0];
@@ -420,9 +225,54 @@ namespace CMI
 
             return _gradients;
         }
-        private void print(string text)
+        private void print(object text)
         {
-            Console.WriteLine(text);
+            Console.WriteLine(text.ToString());
+        }
+
+        public void update_parameters_lstm(List<NDArray> parameters, double learning_rate)
+        {
+            var _Wf = parameters[2];
+            var _Wi = parameters[3];
+            var _Wc = parameters[4];
+            var _Wo = parameters[5];
+            //var _Wy = parameters[4];
+            var _bf = parameters[6];
+            var _bi = parameters[7];
+            var _bc = parameters[8];
+            var _bo = parameters[9];
+            //var _by = parameters[9];
+
+            Wf -= (learning_rate * _Wf);
+            Wi -= (learning_rate * _Wi);
+            Wc -= (learning_rate * _Wc);
+            Wo -= (learning_rate * _Wo);
+            //Wy -= learning_rate * _Wy;
+            bf -= (learning_rate * _bf);
+            bi -= (learning_rate * _bi);
+            bc -= (learning_rate * _bc);
+            bo -= (learning_rate * _bo);
+            //by -= learning_rate * _b)y;
+        }
+
+        // calculate cost
+        public double compute_cost(NDArray Y, NDArray Y_hat)
+        {
+            // what is the difference between Y and Y_hat?
+            // Y_hat is the output of the network
+            // Y is the expected output
+
+            // how do i determine the expected output? 
+            // i have a list of words, and i have a list of words that are the next words
+            // i have a list of words that are the previous words
+            // i have a list of words that are the next words
+            // i have a list of words that are the next words
+            
+
+            var m = Y.Shape[1];
+            var logprobs = np.multiply(np.log(Y_hat), Y) + np.multiply((1 - Y), np.log(1 - Y_hat));
+            var cost = -1 / m * np.sum(logprobs);
+            return cost;
         }
 
         private void replace(ref NDArray array, NDArray replace_with, int static_value)
