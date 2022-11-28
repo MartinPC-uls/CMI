@@ -45,5 +45,16 @@ namespace CMI
 
             return result;
         }
+        public static double tanh2(double x)
+        {
+            var result = Math.Pow(Math.Tanh(x), 2);
+
+            return result;
+        }
+        public static double generateRandom()
+        {
+            Random random = new Random();
+            return random.NextDouble() - random.NextDouble();
+        }
     }
 }

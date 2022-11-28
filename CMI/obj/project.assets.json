@@ -2,6 +2,29 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "Altimesh.Hybridizer.Runtime.CUDAImports/2.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/.net48/Hybridizer.Runtime.CUDAImports.dll": {}
+        },
+        "runtime": {
+          "lib/.net48/Hybridizer.Runtime.CUDAImports.dll": {}
+        }
+      },
+      "ClooN/1.1.2": {
+        "type": "package",
+        "dependencies": {
+          "Sourceforge.Cloo": "0.9.1"
+        },
+        "compile": {
+          "lib/net35/ClooN.dll": {},
+          "lib/net35/RndXorshift.dll": {}
+        },
+        "runtime": {
+          "lib/net35/ClooN.dll": {},
+          "lib/net35/RndXorshift.dll": {}
+        }
+      },
       "Deedle/2.5.0": {
         "type": "package",
         "dependencies": {
@@ -79,6 +102,27 @@
           "lib/netstandard2.0/NumSharp.dll": {}
         }
       },
+      "OpenCL.Net/2.2.9": {
+        "type": "package",
+        "compile": {
+          "lib/net40/OpenCL.Net.dll": {}
+        },
+        "runtime": {
+          "lib/net40/OpenCL.Net.dll": {}
+        },
+        "build": {
+          "build/net40/OpenCL.Net.targets": {}
+        }
+      },
+      "Sourceforge.Cloo/0.9.1": {
+        "type": "package",
+        "compile": {
+          "lib/net35/Cloo.dll": {}
+        },
+        "runtime": {
+          "lib/net35/Cloo.dll": {}
+        }
+      },
       "System.Memory/4.5.4": {
         "type": "package",
         "compile": {
@@ -91,6 +135,32 @@
     }
   },
   "libraries": {
+    "Altimesh.Hybridizer.Runtime.CUDAImports/2.0.1": {
+      "sha512": "54B98CXn6tstGtR9ePbNsyG9pAn4o4FCnCvaPh8eZv1lMp0PAkobXHbS5BOoceMJPeksYE4MuwBf6GjTWT4CLw==",
+      "type": "package",
+      "path": "altimesh.hybridizer.runtime.cudaimports/2.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "altimesh.hybridizer.runtime.cudaimports.2.0.1.nupkg.sha512",
+        "altimesh.hybridizer.runtime.cudaimports.nuspec",
+        "lib/.net48/Hybridizer.Runtime.CUDAImports.dll"
+      ]
+    },
+    "ClooN/1.1.2": {
+      "sha512": "B2qNlTTag/RZI/u5Cjsmt5NpGiDo8qGRWqKozqB8R92vXb+wo8Pusmgfxvg1yct64DWFKHAfHtAS5DzJaHo8/Q==",
+      "type": "package",
+      "path": "cloon/1.1.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "cloon.1.1.2.nupkg.sha512",
+        "cloon.nuspec",
+        "lib/net35/ClooN.XML",
+        "lib/net35/ClooN.dll",
+        "lib/net35/RndXorshift.dll"
+      ]
+    },
     "Deedle/2.5.0": {
       "sha512": "bF4UPwiXzvQFCaeIbrM4zS0WpKOFMcprlDRWwtR2++4RfAWhm8AbB7+fs/71wh5pFl8HHreNgqZhEE9Bp9lNPQ==",
       "type": "package",
@@ -167,6 +237,33 @@
         "numsharp.nuspec"
       ]
     },
+    "OpenCL.Net/2.2.9": {
+      "sha512": "88xksmTwopVt7UN8Kdpry3sIKcEM5sbvIKJYYwj8MGOvnpqS50N9HaKBD/oXae/1pKyuj2/Ipo1eid7yQ18B1Q==",
+      "type": "package",
+      "path": "opencl.net/2.2.9",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/net40/OpenCL.Net.targets",
+        "lib/net40/OpenCL.Net.dll",
+        "opencl.net.2.2.9.nupkg.sha512",
+        "opencl.net.nuspec"
+      ]
+    },
+    "Sourceforge.Cloo/0.9.1": {
+      "sha512": "hlgxHlEFVfIR2cNoy/YCjmaB24eRDbgl7Dsg6v4PuiQ9M0hiSYmK+wvhVJUZWbMsA+O0CMoNcLWK1tcNgoLe2w==",
+      "type": "package",
+      "path": "sourceforge.cloo/0.9.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net35/Cloo.dll",
+        "lib/net35/Cloo.dll.config",
+        "lib/net35/Cloo.xml",
+        "sourceforge.cloo.0.9.1.nupkg.sha512",
+        "sourceforge.cloo.nuspec"
+      ]
+    },
     "System.Memory/4.5.4": {
       "sha512": "1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw==",
       "type": "package",
@@ -193,8 +290,11 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Altimesh.Hybridizer.Runtime.CUDAImports >= 2.0.1",
+      "ClooN >= 1.1.2",
       "Deedle >= 2.5.0",
-      "NumSharp >= 0.30.0"
+      "NumSharp >= 0.30.0",
+      "OpenCL.Net >= 2.2.9"
     ]
   },
   "packageFolders": {
@@ -240,6 +340,14 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Altimesh.Hybridizer.Runtime.CUDAImports": {
+            "target": "Package",
+            "version": "[2.0.1, )"
+          },
+          "ClooN": {
+            "target": "Package",
+            "version": "[1.1.2, )"
+          },
           "Deedle": {
             "target": "Package",
             "version": "[2.5.0, )"
@@ -247,6 +355,10 @@
           "NumSharp": {
             "target": "Package",
             "version": "[0.30.0, )"
+          },
+          "OpenCL.Net": {
+            "target": "Package",
+            "version": "[2.2.9, )"
           }
         },
         "imports": [
@@ -267,5 +379,47 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Altimesh.Hybridizer.Runtime.CUDAImports 2.0.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Altimesh.Hybridizer.Runtime.CUDAImports",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'ClooN 1.1.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "ClooN",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'OpenCL.Net 2.2.9' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "OpenCL.Net",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Sourceforge.Cloo 0.9.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Sourceforge.Cloo",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }

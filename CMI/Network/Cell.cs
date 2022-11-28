@@ -8,215 +8,73 @@ namespace CMI.Network
 {
     public sealed class Cell : LSTM
     {
-        public double input { get; set; }
-        public double prev_long { get; set; }
-        public double prev_short { get; set; }
+        public double x { get; set; }
+        public double ht_1 { get; set; }
+        public double ct_1 { get; set; }
+        public double ct { get; set; }
+        public double ht { get; set; }
+        public double label { get; set; }
+        public double a { get; set; }
+        public double i { get; set; }
+        public double f { get; set; }
+        public double o { get; set; }
 
-        public double next_long { get; set;  }
-        public double next_short { get; set; }
+        public double dx { get; set; }
+        public double dht { get; set; }
+        public double dht_1 { get; set; }
+        public double dct { get; set; }
+        public double da { get; set; }
+        public double di { get; set; }
+        public double df { get; set; }
+        public double do_ { get; set; }
 
-        public double fg_value { get; set; }
-        public double ug_value { get; set; }
-        // from ug_value: pltm and pmr
-        public double pltm_value { get; set; }
-        public double pmr_value { get; set; }
+        public double dloss { get; set; }
 
-        public double og_value { get; set; }
-        // output prediction
-        public double output { get; set; }
-
-        public Cell(double input, double prev_long, double prev_short) : base()
+        public Cell(double x, double ct_1, double ht_1) : base()
         {
-            this.input = input;
-            this.prev_long = prev_long;
-            this.prev_short = prev_short;
-
-            next_long = prev_long;
-            next_short = prev_short;
-
-            forward();
+            this.x = x;
+            this.ct_1 = ct_1;
+            this.ht_1 = ht_1;
         }
 
-        private void forward()
+        public void forward()
         {
-            forget_gate();
             update_gate();
+            forget_gate();
             output_gate();
         }
 
-        public List<double> backpropagation(double original_value, double predicted_value)
+        public void backpropagation(double target, double ht, double next_dct, double next_f)
         {
-            /* 
-             Returns:
-              Forget Gate Gradients:
-                dWif w.r.t Wif
-                dWsf w.r.t Wsf
-                dbf  w.r.t bf
-            
-              Update Gate Gradients:
-                dWipltm w.r.t Wipltm
-                dWspltm w.r.t Wspltm
-                dbpltm  w.r.t bpltm
-                dWipmr  w.r.t Wipmr
-                dWspmr  w.r.t Wspmr
-                dbpmr   w.r.t bpmr
+            dloss = this.ht - target;
+            dht = dloss + ht;
+            dct = dht * o * (1 - tanh2(ct)) + next_dct * next_f;
 
-              Output Gate Gradients:
-                dWso w.r.t Wso
-                dWio w.r.t Wio
-                dbo  w.r.t bo
-            
-             * w.r.t: With Respect To
-             */
+            da = dct * i * (1 - Math.Pow(a, 2));
+            di = dct * a * i * (1 - i);
+            df = dct * ct_1 * f * (1 - f);
+            do_ = dht * tanh(ct) * o * (1 - o);
 
-            double E_delta = 0.5 * Math.Pow(original_value - predicted_value, 2);
-
-            List<double> fg_gradients = getForgetGateGradients(E_delta);
-            List<double> ug_gradients = getUpdateGateGradients(E_delta);
-            List<double> og_gradients = getOutputGateGradients(E_delta);
-
-            List<double> gradients = new();
-            gradients.AddRange(fg_gradients);
-            gradients.AddRange(ug_gradients);
-            gradients.AddRange(og_gradients);
-
-            return gradients;
+            dx = Wa * da + Wi * di + Wf * df + Wo * do_;
+            dht_1 = Ua * da + Ui * di + Uf * df + Uo * do_;
         }
-
-        private List<double> getForgetGateGradients(double E_delta)
+                    
+        private void update_gate()
         {
-            List<double> gradients = new();
-
-            var f_value = Wsf * prev_short + Wif * input + bf;
-            var derivative_fg = E_delta * og_value * (1 - Math.Pow(tanh(next_long), 2)) * prev_long *
-                sigmoid(f_value) * (1 - sigmoid(f_value));
-            
-            var dWif = derivative_fg * input;
-            var dWsf = derivative_fg * prev_short;
-            var dbf = derivative_fg;
-
-            gradients.Add(dWif);
-            gradients.Add(dWsf);
-            gradients.Add(dbf);
-
-            return gradients;
-        }
-
-        private List<double> getUpdateGateGradients(double E_delta)
-        {
-            List<double> gradients = new();
-
-            var gradients_pmr = getPotentialMemoryToRememberGradients(E_delta);
-            var gradients_pltm = getPotentialLongTermMemoryGradients(E_delta);
-
-            gradients.AddRange(gradients_pmr);
-            gradients.AddRange(gradients_pltm);
-
-            return gradients;
-        }
-
-        private List<double> getPotentialMemoryToRememberGradients(double E_delta)
-        {
-            List<double> gradients = new();
-            var pmr_value = Wipmr * input + Wspmr * prev_short + bpmr;
-            var derivative_pmr = E_delta * og_value * (1 - Math.Pow(tanh(next_long), 2)) * this.pmr_value *
-                sigmoid(pmr_value) * (1 - sigmoid(pmr_value));
-            
-            var dWimpr = derivative_pmr * input;
-            var dWspmr = derivative_pmr * prev_short;
-            var dbpmr = derivative_pmr;
-
-            gradients.Add(dWimpr);
-            gradients.Add(dWspmr);
-            gradients.Add(dbpmr);
-
-            return gradients;
-        }
-        private List<double> getPotentialLongTermMemoryGradients(double E_delta)
-        {
-            List<double> gradients = new();
-
-            var pltm_value = Wipltm * input + Wspltm * prev_short + bpltm;
-            var derivative_pltm = E_delta * og_value * (1 - Math.Pow(tanh(next_long), 2)) * this.pltm_value *
-                (1 - Math.Pow(tanh(pltm_value), 2));
-            
-            var dWipltm = derivative_pltm * input;
-            var dWspltm = derivative_pltm * prev_short;
-            var dbpltm = derivative_pltm;
-
-            gradients.Add(dWipltm);
-            gradients.Add(dWspltm);
-            gradients.Add(dbpltm);
-
-            return gradients;
-        }
-
-        private List<double> getOutputGateGradients(double E_delta)
-        {
-            List<double> gradients = new();
-
-            var o_value = Wio * input + Wso * prev_short + bo;
-            var derivative_og = E_delta * tanh(next_long) * sigmoid(o_value) * (1 - sigmoid(o_value));
-            
-            var dWio = derivative_og * input;
-            var dWso = derivative_og * prev_short;
-            var dbo = derivative_og;
-
-            gradients.Add(dWio);
-            gradients.Add(dWso);
-            gradients.Add(dbo);
-
-            return gradients;
+            a = tanh(Wa * x + Ua * ht_1 + ba);
+            i = sigmoid(Wi * x + Ui * ht_1 + bi);
         }
 
         private void forget_gate()
         {
-            var result = sigmoid(Wsf * prev_short + Wif * input + bf);
-
-            fg_value = result;
-
-            next_long *= result;
+            f = sigmoid(Wf * x + Uf * ht_1 + bf);
+            ct = f * ct_1 + a * i;
         }
 
-        private double potential_long_term_memory()
-        {
-            var result = tanh(Wipltm * input + Wspltm * prev_short + bpltm);
-
-            pltm_value = result;
-
-            return result;
-        }
-        private double potential_memory_to_remember()
-        {
-            var result = sigmoid(Wipmr * input + Wspmr * prev_short + bpmr);
-
-            pmr_value = result;
-
-            return result;
-        }
-        private void update_gate()
-        {
-            var pltm = potential_long_term_memory();
-            var pmr = potential_memory_to_remember();
-
-            var result = pltm * pmr;
-
-            ug_value = result;
-
-            next_long += result;
-        }
         private void output_gate()
         {
-            var psmr = sigmoid(Wio * input + Wso * prev_short + bo);
-            var pstm = tanh(prev_long);
-            
-            var result = psmr * pstm;
-
-            next_short = result;
-
-            og_value = next_short;
-            
-            output = next_short;
+            o = sigmoid(Wo * x + Uo * ht_1 + bo);
+            ht = tanh(ct) * o;
         }
     }
 }

@@ -8,11 +8,37 @@
     ".NETCoreApp,Version=v6.0": {
       "CMI/1.0.0": {
         "dependencies": {
+          "Altimesh.Hybridizer.Runtime.CUDAImports": "2.0.1",
+          "ClooN": "1.1.2",
           "Deedle": "2.5.0",
-          "NumSharp": "0.30.0"
+          "NumSharp": "0.30.0",
+          "OpenCL.Net": "2.2.9"
         },
         "runtime": {
           "CMI.dll": {}
+        }
+      },
+      "Altimesh.Hybridizer.Runtime.CUDAImports/2.0.1": {
+        "runtime": {
+          "lib/.net48/Hybridizer.Runtime.CUDAImports.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "ClooN/1.1.2": {
+        "dependencies": {
+          "Sourceforge.Cloo": "0.9.1"
+        },
+        "runtime": {
+          "lib/net35/ClooN.dll": {
+            "assemblyVersion": "1.1.2.0",
+            "fileVersion": "1.1.2.0"
+          },
+          "lib/net35/RndXorshift.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Deedle/2.5.0": {
@@ -89,6 +115,22 @@
           }
         }
       },
+      "OpenCL.Net/2.2.9": {
+        "runtime": {
+          "lib/net40/OpenCL.Net.dll": {
+            "assemblyVersion": "2.2.9.0",
+            "fileVersion": "2.2.9.0"
+          }
+        }
+      },
+      "Sourceforge.Cloo/0.9.1": {
+        "runtime": {
+          "lib/net35/Cloo.dll": {
+            "assemblyVersion": "0.9.1.0",
+            "fileVersion": "0.9.1.0"
+          }
+        }
+      },
       "System.Memory/4.5.4": {}
     }
   },
@@ -97,6 +139,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Altimesh.Hybridizer.Runtime.CUDAImports/2.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-54B98CXn6tstGtR9ePbNsyG9pAn4o4FCnCvaPh8eZv1lMp0PAkobXHbS5BOoceMJPeksYE4MuwBf6GjTWT4CLw==",
+      "path": "altimesh.hybridizer.runtime.cudaimports/2.0.1",
+      "hashPath": "altimesh.hybridizer.runtime.cudaimports.2.0.1.nupkg.sha512"
+    },
+    "ClooN/1.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-B2qNlTTag/RZI/u5Cjsmt5NpGiDo8qGRWqKozqB8R92vXb+wo8Pusmgfxvg1yct64DWFKHAfHtAS5DzJaHo8/Q==",
+      "path": "cloon/1.1.2",
+      "hashPath": "cloon.1.1.2.nupkg.sha512"
     },
     "Deedle/2.5.0": {
       "type": "package",
@@ -118,6 +174,20 @@
       "sha512": "sha512-1f8m2B/m/ZSsICaqLszspCyA9/sTHK7wBKEH5KsxGg/r3QCYTc2HnfYOGMeCytvo8/j0v/umn5umLOLhdExlFA==",
       "path": "numsharp/0.30.0",
       "hashPath": "numsharp.0.30.0.nupkg.sha512"
+    },
+    "OpenCL.Net/2.2.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-88xksmTwopVt7UN8Kdpry3sIKcEM5sbvIKJYYwj8MGOvnpqS50N9HaKBD/oXae/1pKyuj2/Ipo1eid7yQ18B1Q==",
+      "path": "opencl.net/2.2.9",
+      "hashPath": "opencl.net.2.2.9.nupkg.sha512"
+    },
+    "Sourceforge.Cloo/0.9.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hlgxHlEFVfIR2cNoy/YCjmaB24eRDbgl7Dsg6v4PuiQ9M0hiSYmK+wvhVJUZWbMsA+O0CMoNcLWK1tcNgoLe2w==",
+      "path": "sourceforge.cloo/0.9.1",
+      "hashPath": "sourceforge.cloo.0.9.1.nupkg.sha512"
     },
     "System.Memory/4.5.4": {
       "type": "package",

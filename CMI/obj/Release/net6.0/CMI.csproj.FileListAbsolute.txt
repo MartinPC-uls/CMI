@@ -31,3 +31,8 @@ C:\Users\ghanv\source\repos\CMI\CMI\obj\Release\net6.0\refint\CMI.dll
 C:\Users\ghanv\source\repos\CMI\CMI\obj\Release\net6.0\CMI.pdb
 C:\Users\ghanv\source\repos\CMI\CMI\obj\Release\net6.0\CMI.genruntimeconfig.cache
 C:\Users\ghanv\source\repos\CMI\CMI\obj\Release\net6.0\ref\CMI.dll
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Release\net6.0\ClooN.dll
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Release\net6.0\RndXorshift.dll
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Release\net6.0\OpenCL.Net.dll
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Release\net6.0\Cloo.dll
+C:\Users\ghanv\source\repos\CMI\CMI\bin\Release\net6.0\Hybridizer.Runtime.CUDAImports.dll

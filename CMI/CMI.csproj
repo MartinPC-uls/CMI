@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Altimesh.Hybridizer.Runtime.CUDAImports" Version="2.0.1" />
+    <PackageReference Include="ClooN" Version="1.1.2" />
     <PackageReference Include="Deedle" Version="2.5.0" />
     <PackageReference Include="NumSharp" Version="0.30.0" />
+    <PackageReference Include="OpenCL.Net" Version="2.2.9" />
   </ItemGroup>
 
 </Project>

@@ -1,66 +1,112 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NumSharp;
-
-namespace CMI.Network
+﻿namespace CMI.Network
 {
     public class LSTM : Utils
     {
-        protected static double Wsf { get; set; } // Weight of short-term memory to forget gate
-        protected static double Wif { get; set; } // Weight of input to forget gate
-        protected static double bf { get; set; } // Bias of forget
-        
-        protected static double Wipltm { get; set; } // Weight of input to potential long-term memory
-        protected static double Wspltm { get; set; } // Weight of short-term memory to potential long-term memory
-        protected static double bpltm { get; set; } // Bias of potential long-term 
-        
-        protected static double Wipmr { get; set; } // Weight of input to potential memory to remember
-        protected static double Wspmr { get; set; } // Weight of short-term memory to potential memory to remember
-        protected static double bpmr { get; set; } // Bias of potential memory to remember
-        
-        protected static double Wso { get; set; } // Weight of short-term memory to output gate
-        protected static double Wio { get; set; } // Weight of input to output gate
-        protected static double bo { get; set; } // Bias of output gate
+        // W: Weight for input
+        // U: Weight for hidden state
+        // b: bias
+        protected static double Wa, Ua;
+        protected static double Wi, Ui;
+        protected static double Wf, Uf;
+        protected static double Wo, Uo;
+        protected static double ba;
+        protected static double bi;
+        protected static double bf;
+        protected static double bo;
 
-        protected static double test { get; set; }
+        private static readonly double LEARNING_RATE = 0.5;
+
+        private static readonly string PARAMETERS_FILE = AppDomain.CurrentDomain.BaseDirectory + "parameters.txt";
 
         private List<Cell> cells;
 
-        public void train(double[] inputs, double[] original_output, int number_of_iterations = 0, double prev_long = 0, double prev_short = 0)
+        public void loadParameters()
         {
+            if (!File.Exists(PARAMETERS_FILE))
+                throw new Exception("Parameters file not found.");
 
+            string[] parameters = File.ReadAllLines(PARAMETERS_FILE);
+            if (parameters.Length < 12)
+                throw new Exception("Could not read the file. Missing parameters.");
+            
+            Wa = double.Parse(parameters[0]);
+            Wi = double.Parse(parameters[1]);
+            Wf = double.Parse(parameters[2]);
+            Wo = double.Parse(parameters[3]);
+
+            Ua = double.Parse(parameters[4]);
+            Ui = double.Parse(parameters[5]);
+            Uf = double.Parse(parameters[6]);
+            Uo = double.Parse(parameters[7]);
+
+            ba = double.Parse(parameters[8]);
+            bi = double.Parse(parameters[9]);
+            bf = double.Parse(parameters[10]);
+            bo = double.Parse(parameters[11]);
+        }
+        public void saveParameters()
+        {
+            if (File.Exists(PARAMETERS_FILE))
+                File.Delete(PARAMETERS_FILE);
+
+            File.Create(PARAMETERS_FILE);
+            using var sw = new StreamWriter(PARAMETERS_FILE);
+            sw.WriteLine(Wa);
+            sw.WriteLine(Wi);
+            sw.WriteLine(Wf);
+            sw.WriteLine(Wo);
+
+            sw.WriteLine(Ua);
+            sw.WriteLine(Ui);
+            sw.WriteLine(Uf);
+            sw.WriteLine(Uo);
+
+            sw.WriteLine(ba);
+            sw.WriteLine(bi);
+            sw.WriteLine(bf);
+            sw.WriteLine(bo);
+        }
+
+        public void train(double[] inputs, double[] original_outputs, int number_of_iterations = 0, double prev_long = 0, double prev_short = 0)
+        {
+            double aux_prev_long = prev_long;
+            double aux_prev_short = prev_short;
             for (int i = 1; i <= number_of_iterations; i++)
             {
-                cells = new List<Cell>();
-
+                cells = new();
                 for (int j = 0; j < inputs.Length; j++)
                 {
-                    Cell newCell = new(inputs[j], prev_long, prev_short);
-                    prev_long = newCell.next_long;
-                    prev_short = newCell.next_short;
-                    print(newCell.output);
-                    cells.Add(newCell);
+                    Cell cell = new(inputs[j], prev_long, prev_short);
+                    cell.forward();
+                    if (i % 10000000 == 0)
+                    {
+                        print(cell.ht);
+                    }
+                    prev_long = cell.ct;
+                    prev_short = cell.ht;
+                    cells.Add(cell);
                 }
-                print("\n");
+                prev_long = aux_prev_long;
+                prev_short = aux_prev_short;
 
-
-                BackPropagationThroughTime(original_output, 0.0005);
+                BackPropagationThroughTime(original_outputs, LEARNING_RATE);
             }
 
         }
 
-        public double mean_squared_error(double[] original_output, double[] predicted_output)
+        public void prediction(double[] inputs, double prev_long = 0, double prev_short = 0)
         {
-            double sum = 0;
-            for (int i = 0; i < original_output.Length; i++)
+            cells = new();
+            for (int j = 0; j < inputs.Length; j++)
             {
-                sum += Math.Pow(original_output[i] - predicted_output[i], 2);
+                Cell cell = new(inputs[j], prev_long, prev_short);
+                cell.forward();
+                print(cell.ht);
+                prev_long = cell.ct;
+                prev_short = cell.ht;
+                cells.Add(cell);
             }
-            print("loss: " + Math.Round((sum / original_output.Length), 3));
-            return Math.Round((sum / original_output.Length), 3);
+            print("\n");
         }
 
         public LSTM()
@@ -69,48 +115,84 @@ namespace CMI.Network
 
         public void initialize()
         {
-            test = np.random.randn(1).ToArray<double>()[0];
+            Wa = generateRandom();
+            Ua = generateRandom();
+            ba = generateRandom();
 
-            Wsf = np.random.randn(1).ToArray<double>()[0];
-            Wif = np.random.randn(1).ToArray<double>()[0];
-            bf = np.random.randn(1).ToArray<double>()[0];
+            Wi = generateRandom();
+            Ui = generateRandom();
+            bi = generateRandom();
 
-            Wipltm = np.random.randn(1).ToArray<double>()[0];
-            Wspltm = np.random.randn(1).ToArray<double>()[0];
-            bpltm = np.random.randn(1).ToArray<double>()[0];
-            Wipmr = np.random.randn(1).ToArray<double>()[0];
-            Wspmr = np.random.randn(1).ToArray<double>()[0];
-            bpmr = np.random.randn(1).ToArray<double>()[0];
+            Wf = generateRandom();
+            Uf = generateRandom();
+            bf = generateRandom();
 
-            Wso = np.random.randn(1).ToArray<double>()[0];
-            Wio = np.random.randn(1).ToArray<double>()[0];
-            bo = np.random.randn(1).ToArray<double>()[0];
+            Wo = generateRandom();
+            Uo = generateRandom();
+            bo = generateRandom();
         }
 
         public void BackPropagationThroughTime(double[] original_output, double learning_rate)
         {
+            double dht = 0;
+            double next_dct = 0;
+            double next_f = 0;
             for (int i = cells.Count - 1; i >= 0; i--)
             {
-                List<double> gradients = cells[i].backpropagation(original_output[2], cells[2].output);
-                Wif -= learning_rate * gradients[0];
-                //print("Wif: " + Wif);
-                //print("\n");
-                //print("[" + original_output[i] + ", " + cells[i].output + "]");
-                //print("Wif: " + Wif);
-                //print("Result: " + learning_rate * gradients[0]);
-                //print("\n");
-                Wsf -= learning_rate * gradients[1];
-                bf -= learning_rate * gradients[2];
-                Wipmr -= learning_rate * gradients[3];
-                Wspmr -= learning_rate * gradients[4];
-                bpmr -= learning_rate * gradients[5];
-                Wipltm -= learning_rate * gradients[6];
-                Wspltm -= learning_rate * gradients[7];
-                bpltm -= learning_rate * gradients[8];
-                Wio -= learning_rate * gradients[9];
-                Wso -= learning_rate * gradients[10];
-                bo -= learning_rate * gradients[11];
+                cells[i].backpropagation(original_output[i], dht, next_dct, next_f);
+                dht = cells[i].dht_1;
+                next_dct = cells[i].dct;
+                next_f = cells[i].f;
             }
+            UpdateParameters(learning_rate);
+        }
+
+        public void UpdateParameters(double learning_rate)
+        {
+            double dWa = 0, dUa = 0, dba = 0;
+            double dWi = 0, dUi = 0, dbi = 0;
+            double dWf = 0, dUf = 0, dbf = 0;
+            double dWo = 0, dUo = 0, dbo = 0;
+
+            // W and b
+            for (int i = 0; i < cells.Count; i++)
+            {
+                dWa += cells[i].da * cells[i].x;
+                dWi += cells[i].di * cells[i].x;
+                dWf += cells[i].df * cells[i].x;
+                dWo += cells[i].do_ * cells[i].x;
+
+                dba += cells[i].da;
+                dbi += cells[i].di;
+                dbf += cells[i].df;
+                dbo += cells[i].do_;
+            }
+            // U
+            for (int i = 0; i < cells.Count - 1; i++)
+            {
+                dUa += cells[i + 1].da * cells[i].ht;
+                dUi += cells[i + 1].di * cells[i].ht;
+                dUf += cells[i + 1].df * cells[i].ht;
+                dUo += cells[i + 1].do_ * cells[i].ht;
+            }
+
+            // Update weights of input
+            Wa -= learning_rate * dWa;
+            Wi -= learning_rate * dWi;
+            Wf -= learning_rate * dWf;
+            Wo -= learning_rate * dWo;
+
+            // Update weights of hidden state
+            Ua -= learning_rate * dUa;
+            Ui -= learning_rate * dUi;
+            Uf -= learning_rate * dUf;
+            Uo -= learning_rate * dUo;
+
+            // Update biases
+            ba -= learning_rate * dba;
+            bi -= learning_rate * dbi;
+            bf -= learning_rate * dbf;
+            bo -= learning_rate * dbo;
         }
     }
 }
