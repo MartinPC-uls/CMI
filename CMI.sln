@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMI", "CMI\CMI.csproj", "{EC11AC2C-8F77-483A-ADC5-3DF87F33EBB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMI", "CMI\CMI.csproj", "{EC11AC2C-8F77-483A-ADC5-3DF87F33EBB8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicXML Parser", "..\MusicXML Parser\MusicXML Parser\MusicXML Parser.csproj", "{44A9501A-23D3-4B5B-ADDF-EE1BA477E773}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{EC11AC2C-8F77-483A-ADC5-3DF87F33EBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC11AC2C-8F77-483A-ADC5-3DF87F33EBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC11AC2C-8F77-483A-ADC5-3DF87F33EBB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44A9501A-23D3-4B5B-ADDF-EE1BA477E773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44A9501A-23D3-4B5B-ADDF-EE1BA477E773}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44A9501A-23D3-4B5B-ADDF-EE1BA477E773}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44A9501A-23D3-4B5B-ADDF-EE1BA477E773}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -131,6 +131,28 @@
         "runtime": {
           "lib/netcoreapp2.1/_._": {}
         }
+      },
+      "MusicXml/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/MusicXml.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/MusicXml.dll": {}
+        }
+      },
+      "MusicXML Parser/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "MusicXml": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/MusicXML Parser.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/MusicXML Parser.dll": {}
+        }
       }
     }
   },
@@ -286,6 +308,16 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "MusicXml/1.0.0": {
+      "type": "project",
+      "path": "../../MusicXml.Net/MusicXml/MusicXml.csproj",
+      "msbuildProject": "../../MusicXml.Net/MusicXml/MusicXml.csproj"
+    },
+    "MusicXML Parser/1.0.0": {
+      "type": "project",
+      "path": "../../MusicXML Parser/MusicXML Parser/MusicXML Parser.csproj",
+      "msbuildProject": "../../MusicXML Parser/MusicXML Parser/MusicXML Parser.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -293,6 +325,7 @@
       "Altimesh.Hybridizer.Runtime.CUDAImports >= 2.0.1",
       "ClooN >= 1.1.2",
       "Deedle >= 2.5.0",
+      "MusicXML Parser >= 1.0.0",
       "NumSharp >= 0.30.0",
       "OpenCL.Net >= 2.2.9"
     ]
@@ -327,7 +360,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\ghanv\\source\\repos\\MusicXML Parser\\MusicXML Parser\\MusicXML Parser.csproj": {
+              "projectPath": "C:\\Users\\ghanv\\source\\repos\\MusicXML Parser\\MusicXML Parser\\MusicXML Parser.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

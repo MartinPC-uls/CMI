@@ -11,6 +11,7 @@
           "Altimesh.Hybridizer.Runtime.CUDAImports": "2.0.1",
           "ClooN": "1.1.2",
           "Deedle": "2.5.0",
+          "MusicXml": "1.0.0",
           "NumSharp": "0.30.0",
           "OpenCL.Net": "2.2.9"
         },
@@ -131,7 +132,23 @@
           }
         }
       },
-      "System.Memory/4.5.4": {}
+      "System.Memory/4.5.4": {},
+      "MusicXML Parser/1.0.0": {
+        "dependencies": {
+          "MusicXml": "1.0.0"
+        },
+        "runtime": {
+          "MusicXML Parser.dll": {}
+        }
+      },
+      "MusicXml.Reference/2.0.1.0": {
+        "runtime": {
+          "MusicXml.dll": {
+            "assemblyVersion": "2.0.1.0",
+            "fileVersion": "2.0.1.0"
+          }
+        }
+      }
     }
   },
   "libraries": {
@@ -195,6 +212,16 @@
       "sha512": "sha512-1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw==",
       "path": "system.memory/4.5.4",
       "hashPath": "system.memory.4.5.4.nupkg.sha512"
+    },
+    "MusicXML Parser/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MusicXml.Reference/2.0.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

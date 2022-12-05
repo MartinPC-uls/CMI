@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using static CMI.Utils;
 
 namespace CMI.Network
 {
@@ -13,7 +9,6 @@ namespace CMI.Network
         public double ct_1 { get; set; }
         public double ct { get; set; }
         public double ht { get; set; }
-        public double label { get; set; }
         public double a { get; set; }
         public double i { get; set; }
         public double f { get; set; }
@@ -37,44 +32,44 @@ namespace CMI.Network
             this.ht_1 = ht_1;
         }
 
-        public void forward()
+        public void Forward()
         {
-            update_gate();
-            forget_gate();
-            output_gate();
+            UpdateGate();
+            ForgetGate();
+            OutputGate();
         }
 
-        public void backpropagation(double target, double ht, double next_dct, double next_f)
+        public void Backpropagation(double target, double ht, double next_dct, double next_f)
         {
             dloss = this.ht - target;
             dht = dloss + ht;
-            dct = dht * o * (1 - tanh2(ct)) + next_dct * next_f;
+            dct = dht * o * (1 - Tanh2(ct)) + next_dct * next_f;
 
             da = dct * i * (1 - Math.Pow(a, 2));
             di = dct * a * i * (1 - i);
             df = dct * ct_1 * f * (1 - f);
-            do_ = dht * tanh(ct) * o * (1 - o);
+            do_ = dht * Tanh(ct) * o * (1 - o);
 
-            dx = Wa * da + Wi * di + Wf * df + Wo * do_;
+            //dx = Wa * da + Wi * di + Wf * df + Wo * do_; // it's never used
             dht_1 = Ua * da + Ui * di + Uf * df + Uo * do_;
         }
                     
-        private void update_gate()
+        private void UpdateGate()
         {
-            a = tanh(Wa * x + Ua * ht_1 + ba);
-            i = sigmoid(Wi * x + Ui * ht_1 + bi);
+            a = Tanh(Wa * x + Ua * ht_1 + ba);
+            i = Sigmoid(Wi * x + Ui * ht_1 + bi);
         }
 
-        private void forget_gate()
+        private void ForgetGate()
         {
-            f = sigmoid(Wf * x + Uf * ht_1 + bf);
+            f = Sigmoid(Wf * x + Uf * ht_1 + bf);
             ct = f * ct_1 + a * i;
         }
 
-        private void output_gate()
+        private void OutputGate()
         {
-            o = sigmoid(Wo * x + Uo * ht_1 + bo);
-            ht = tanh(ct) * o;
+            o = Sigmoid(Wo * x + Uo * ht_1 + bo);
+            ht = Tanh(ct) * o;
         }
     }
 }

@@ -63,19 +63,19 @@ namespace CMI
 
         private double forget_gate()
         {
-            var result = sigmoid(Wsf * prev_short + Wif * input + bf);
+            var result = Sigmoid(Wsf * prev_short + Wif * input + bf);
 
             return result;
         }
         private double potential_long_term_memory()
         {
-            var result = tanh(Wipltm * input + Wspltm * prev_short + bpltm);
+            var result = Tanh(Wipltm * input + Wspltm * prev_short + bpltm);
 
             return result;
         }
         private double potential_memory_to_remember()
         {
-            var result = sigmoid(Wipmr * input + Wspmr * prev_short + bpmr);
+            var result = Sigmoid(Wipmr * input + Wspmr * prev_short + bpmr);
 
             return result;
         }
@@ -90,8 +90,8 @@ namespace CMI
         }
         private double output_gate()
         {
-            var psmr = sigmoid(Wio * input + Wso * prev_short + bo);
-            var pstm = tanh(prev_long);
+            var psmr = Sigmoid(Wio * input + Wso * prev_short + bo);
+            var pstm = Tanh(prev_long);
 
             var result = psmr * pstm;
 

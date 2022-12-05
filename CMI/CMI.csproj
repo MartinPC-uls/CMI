@@ -15,4 +15,8 @@
     <PackageReference Include="OpenCL.Net" Version="2.2.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\MusicXML Parser\MusicXML Parser\MusicXML Parser.csproj" />
+  </ItemGroup>
+
 </Project>
