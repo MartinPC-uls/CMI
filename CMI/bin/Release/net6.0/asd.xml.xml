@@ -2,13 +2,13 @@
 <!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
 <score-partwise version="2.0">
   <work>
-    <work-title>Test</work-title>
+    <work-title>CMI-generated</work-title>
   </work>
   <identification>
-    <creator type="composer">Martín Pizarro</creator>
+    <creator type="composer">IA CMI</creator>
     <encoding>
       <software>MusicXML Parser</software>
-      <encoding-date>2022-12-11</encoding-date>
+      <encoding-date>2022-12-12</encoding-date>
     </encoding>
     <supports element="accidental" type="yes" />
     <supports element="beam" type="yes" />
@@ -29,7 +29,7 @@
       <attributes>
         <divisions>24</divisions>
         <key>
-          <fifths>-1</fifths>
+          <fifths>0</fifths>
         </key>
         <time>
           <beats>4</beats>
@@ -49,7 +49,7 @@
         <direction-type>
           <metronome parentheses="no">
             <beat-unit>quarter</beat-unit>
-            <per-minute>134</per-minute>
+            <per-minute>114</per-minute>
           </metronome>
         </direction-type>
       </direction>

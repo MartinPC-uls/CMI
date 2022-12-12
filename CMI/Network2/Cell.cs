@@ -1,78 +1,82 @@
-﻿using static CMI.Utils;
-using NumSharp;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static CMI.Utils;
+using static CMI.Matrix;
 
 namespace CMI.Network2
 {
-    public sealed class Cell : LSTM
+    public class Cell : LSTM
     {
         public double x { get; set; }
-        public NDArray ht_1 { get; set; }
-        public NDArray ct_1 { get; set; }
-        public NDArray ct { get; set; }
-        public NDArray ht { get; set; }
-        public double label { get; set; }
-        public NDArray a { get; set; }
-        public NDArray i { get; set; }
-        public NDArray f { get; set; }
-        public NDArray o { get; set; }
+        public double ht_1 { get; set; }
+        public double ct_1 { get; set; }
+        public double ct { get; set; }
+        public double ht { get; set; }
+        public double a { get; set; }
+        public double i { get; set; }
+        public double f { get; set; }
+        public double o { get; set; }
 
         public double dx { get; set; }
-        public NDArray dht { get; set; }
-        public NDArray dht_1 { get; set; }
-        public NDArray dct { get; set; }
-        public NDArray da { get; set; }
-        public NDArray di { get; set; }
-        public NDArray df { get; set; }
-        public NDArray do_ { get; set; }
+        public double dht { get; set; }
+        public double dht_1 { get; set; }
+        public double dct { get; set; }
+        public double da { get; set; }
+        public double di { get; set; }
+        public double df { get; set; }
+        public double do_ { get; set; }
 
-        public NDArray dloss { get; set; }
+        public double dloss { get; set; }
 
-        public Cell(double x, NDArray ct_1, NDArray ht_1) : base()
+        public Cell(double x, double ct_1, double ht_1) : base()
         {
             this.x = x;
             this.ct_1 = ct_1;
             this.ht_1 = ht_1;
         }
 
-        public void forward()
+        public void Forward()
         {
-            update_gate();
-            forget_gate();
-            output_gate();
+            UpdateGate();
+            ForgetGate();
+            OutputGate();
         }
 
-        public void backpropagation(double target, NDArray ht, NDArray next_dct, NDArray next_f)
+        public void Backpropagation(double target, double next_dht, double next_dct, double next_f)
         {
-            dloss = this.ht - target;
-            dht = dloss + ht;
+            dloss = ht - target;
+            dht = dloss + next_dht;
             dct = dht * o * (1 - Tanh2(ct)) + next_dct * next_f;
 
-            //da = dct * i * (1 - Math.Pow(a, 2));
-            da = dct * i * (1 - np.power(a, 2));
+            da = dct * i * (1 - Math.Pow(a, 2));
             di = dct * a * i * (1 - i);
             df = dct * ct_1 * f * (1 - f);
             do_ = dht * Tanh(ct) * o * (1 - o);
 
             //dx = Wa * da + Wi * di + Wf * df + Wo * do_; // it's never used
-            dht_1 = Ua * da + Ui * di + Uf * df + Uo * do_;
+            //dht_1 = Multiply(Ua, da) + Multiply(Ui, di) + Multiply(Uf, df) + Multiply(Uo, do_);
         }
-                    
-        private void update_gate()
+        
+        private void UpdateGate()
         {
-            a = Tanh(Wa * x + Ua * ht_1 + ba);
-            i = Sigmoid(Wi * x + Ui * ht_1 + bi);
+            //a = Tanh(Multiply(Wa, x) + Multiply(Ua, ht_1) + ba);
+            //i = Sigmoid(Multiply(Wi, x) + Multiply(Ui, ht_1) + bi);
         }
 
-        private void forget_gate()
+        private void ForgetGate()
         {
-            f = Sigmoid(Wf * x + Uf * ht_1 + bf);
-            ct = f * ct_1 + a * i;
+            //f = Sigmoid(Multiply(Wf, x) + Multiply(Uf, ht_1) + bf);
+            ct = f * ct_1 + i * a;
+        }
+        
+        private void OutputGate()
+        {
+            //o = Sigmoid(Multiply(Wo, x) + Multiply(Uo, ht_1) + bo);
+            ht = o * Tanh(ct);
         }
 
-        private void output_gate()
-        {
-            o = Sigmoid(Wo * x + Uo * ht_1 + bo);
-            ht = Tanh(ct) * o;
-        }
     }
 }

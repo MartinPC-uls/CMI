@@ -1,11 +1,14 @@
 ﻿using CMI.Network;
+//using CMI.Network2;
 using static CMI.Data.Normalizer;
 using static CMI.Utils;
+using static CMI.Matrix;
 using CMI.Data;
 using MusicXML_Parser;
 using System.Xml;
 using MusicXML_Parser.Music;
 using NumSharp;
+using CMI;
 
 List<char[]> input_chunks = new();
 List<char[]> output_chunks = new();
@@ -28,35 +31,51 @@ void Split(char[] input, char[] output, int chunkSize = 0)
         }
         input_chunks.Add(input_chunk);
         output_chunks.Add(output_chunk);
-    }
+    } 
 }
 
-Split("^ `^][` `^][[ YWWYV V JV JRVJVJRVVbV^b3:C3:C3:TRTRTR^7>F7>F7>QT]Q]QT]R^RV^5<E5<E5<TRTRTR^7>F7>F7>TW`R^Q]OW[T[`'3:C3:C3:T[`R^".ToCharArray(), " `^][` `^][[ YWWYV V JV JRVJVJRVVbV^b3:C3:C3:TRTRTR^7>F7>F7>QT]Q]QT]R^RV^5<E5<E5<TRTRTR^7>F7>F7>TW`R^Q]OW[T[`'3:C3:C3:T[`R^^".ToCharArray(), 6);
+Split(" LQS QULQXPSLPXEDNQIN QVXBVZQV]SXQUUJISVNSUVUSQGJGNEINNPQSEJEEPSSUVX@GLLVUL9@EELNJLNLP@EG>E@EI@ELDG@DL98BE=BDEEJL6EJNNQ".ToCharArray(), "LQS QULQXPSLPXEDNQIN QVXBVZQV]SXQUUJISVNSUVUSQGJGNEINNPQSEJEEPSSUVX@GLLVUL9@EELNJLNLP@EG>E@EI@ELDG@DL98BE=BDEEJL6EJNNQG".ToCharArray(), 10);
 
 /*foreach (var input in input_chunks)
 {
     foreach (var i in input)
     {
-        print(i, false);
+        Print(i, false);
     }
-    print("\n");
+    Print("\n");
 }*/
 
-LSTM lstm = new();
-lstm.loadParameters();
+//LSTM lstm = new(3);
+//LSTM lstm = new();
+//lstm.LoadParameters();
+//lstm.InitializeWeights();
 //lstm.initialize();
 
+MainProgram program = new();
+/*
+
 //lstm.SeqTrain(input_chunks, output_chunks, 10000000, 100000000);
-char[] input = "^ `^][` `^][[ YWWYV V JV JRVJVJRVVbV^b3:C".ToCharArray();
+//char[] input = "^ `^][` `^][[ YWWYV V JV JRVJVJRVVbV^b3:C3:C3".ToCharArray();
+//char[] input =  " LQS QULQXPSLPXEDNQIN QVXBVZQV]SXQUUJISVNSUVUSQGJGNEINNPQSEJEEPSSUVX@GLLVUL9@EELNJLNLP@EG>E@EI@ELDG@DL98BE=BDEEJL6EJNNQ".ToCharArray();
+char[] input =  "TT<".ToCharArray();
 double[] _input = Normalize(input);
-char[] output = " `^][` `^][[ YWWYV V JV JRVJVJRVVbV^b3:C3:C3:TRTRTR^7>F7>F7>QT]Q]QT]R^RV^5<E5<E5<TRTRTR^7>F7>F7>TW`R^Q]OW[T[`'3:C3:C3:T[`R^^".ToCharArray();
+char[] output = "T<H".ToCharArray();
 double[] _output = Normalize(output);
 
+//double[] _input = new double[]  { 0.1, 0.3, 0.5, 0.7, 0.9, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.9, 0.7, 0.5, 0.3, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 };
+//double[] _output = new double[] { 0.3, 0.5, 0.7, 0.9, 0.7, 0.5, 0.3, 0.1, 0.3, 0.5, 0.7, 0.9, 0.7, 0.5, 0.3, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 };
 
-//lstm.Train(_input, _output, 10000000, 100000000);
+//double[] _input = new double[]  { 0.1, 0.3, 0.5, 0.7 };
+//double[] _output = new double[] { 0.3, 0.5, 0.7, 0.9 };
 
-lstm.SeqPrediction(_input, 100);
-//lstm.Prediction(_input, 3);
+//lstm.SeqPrediction(_input, 1);
+
+//lstm.Train(_input, _output, 10000000, 1000000);
+//lstm.SeqTrain(input_chunks, output_chunks, 100000, 100000);
+//lstm.Train(_input, _output, 1000000, 100000000);
+
+//lstm.SeqPrediction(_input, 10);
+lstm.Prediction(_input);
 
 SheetConfiguration music = new SheetConfiguration()
 {
@@ -81,7 +100,7 @@ SheetConfiguration music = new SheetConfiguration()
     TimeBeats = 4,
     TimeBeatType = 4
 };
-XmlDocument score = music.Init("score.xml", Key.FMajor);
+XmlDocument score = music.Init("asd.xml", Key.CMajor);
 //XmlDocument score = sheet.Load(AppDomain.CurrentDomain.BaseDirectory + "score.xml");
 XmlNode node = score.SelectSingleNode("score-partwise/part[@id='P1']");
 XmlNode measure = music.AddMeasure(node);
@@ -206,4 +225,3 @@ foreach (var predicted in lstm.Predicted_Output)
 {
     music.Add(predicted, 1, measure);
 }*/
-

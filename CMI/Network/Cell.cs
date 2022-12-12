@@ -39,10 +39,10 @@ namespace CMI.Network
             OutputGate();
         }
 
-        public void Backpropagation(double target, double ht, double next_dct, double next_f)
+        public void Backpropagation(double target, double next_dht, double next_dct, double next_f)
         {
-            dloss = this.ht - target;
-            dht = dloss + ht;
+            dloss = ht - target;
+            dht = dloss + next_dht;
             dct = dht * o * (1 - Tanh2(ct)) + next_dct * next_f;
 
             da = dct * i * (1 - Math.Pow(a, 2));
